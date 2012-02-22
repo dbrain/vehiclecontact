@@ -1,7 +1,7 @@
 {
   "name": "vehiclecontact",
   "description": "Contact the owner of a vehicle",
-  "version": "0.0.1",
+  "version": "0.0.1-3",
   "main": "index",
   "dependencies": {
     "express": "2.5.x",
@@ -10,5 +10,14 @@
     "underscore": "1.3.x",
     "oauth2-helper": "0.0.x"
   },
-  "engine": "node >= 0.6.0"
+  "bundledDependencies": [
+    "oauth2-helper"
+  ],
+  "engines": {
+    "node": "v0.6.x"
+  },
+  "subdomain": "vehiclecontact",
+  "scripts": {
+    "start": "index.js"
+  }
 }
