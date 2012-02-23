@@ -6,6 +6,7 @@ var app = module.exports = express.createServer();
 var requestValidator = require('../../lib/requestValidator');
 var oauthMiddleware = require('../../lib/oauthMiddleware');
 var authorisationMiddleware = require('../../lib/authorisationMiddleware');
+var responseCreator = require('../../lib/responseCreator');
 
 app.mounted(function mounted(parent) {
   app.registerErrorHandlers();
@@ -25,14 +26,24 @@ app.configure(function () {
   mongoose.connect(config.mongo.uri);
 });
 
-app.post('/createUser', function createUser(req, res, next) {
+app.put('/user', function createUser(req, res, next) {
   api.createUser(req.body, function createUserResponse(err, user) {
     if (err) {
-      next(err)
+      res.send(err)
     } else {
-      res.send({ status: 'ok', user: user });
+      res.send(responseCreator.createUserResponse(user));
     }
   });
+});
+
+app.put('/rego', function createRego(req, res, next) {
+  api.createRego(req.user, req.body, function createRegoResponse(err, rego) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(responseCreator.createRegoResponse(rego));
+    }
+  })
 });
 
 app.get('/me', function getMe(req, res, next) {
