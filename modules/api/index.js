@@ -46,8 +46,26 @@ app.put('/rego', function createRego(req, res, next) {
   })
 });
 
-app.get('/me', function getMe(req, res, next) {
-  res.send(req.user);
+app.put('/rego/:country/:state/:rego/watchers', function watchRego(req, res, next) {
+  function watchRegoResponse(err, response) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(responseCreator.createWatcherResponse(response.rego, response.watcher));
+    }
+  }
+  api.watchRego(req.body, req.user, req.param('rego'), req.param('state'), req.param('country'), watchRegoResponse);
+});
+
+app.put('/rego/:country/:state/:rego/conversations', function createConversationOnRego(req, res, next) {
+  function commentOnRegoResponse(err, response) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(responseCreator.commentOnRegoResponse(response.rego, response.conversation));
+    }
+  }
+  api.createConversationOnRego(req.body, req.user, req.param('rego'), req.param('state'), req.param('country'), commentOnRegoResponse);
 });
 
 app.get('/health', function (req, res, next) {
