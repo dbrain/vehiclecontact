@@ -1,8 +1,8 @@
 {
   "name": "vehiclecontact",
   "description": "Contact the owner of a vehicle",
-  "version": "0.0.1",
-  "main": "index",
+  "version": "0.0.1-1",
+  "main": "./index.js",
   "dependencies": {
     "express": "2.5.x",
     "async": "0.1.x",
@@ -17,6 +17,6 @@
   },
   "subdomain": "vehiclecontact",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ./index.js"
   }
 }
