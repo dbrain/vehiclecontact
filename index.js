@@ -1,1 +1,1 @@
-module.exports = require('./modules/vehiclecontact.js');
+module.exports = require('./modules/vehiclecontact');
