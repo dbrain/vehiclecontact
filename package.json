@@ -1,14 +1,13 @@
 {
   "name": "vehiclecontact",
   "description": "Contact the owner of a vehicle",
-  "version": "0.0.1-13",
+  "version": "0.0.1",
   "main": "index",
   "dependencies": {
     "express": "2.5.x",
     "async": "0.1.x",
     "mongoose": "2.5.x",
-    "underscore": "1.3.x",
-    "oauth2-helper": "0.0.x"
+    "underscore": "1.3.x"
   },
   "bundledDependencies": [
     "oauth2-helper"
@@ -18,6 +17,6 @@
   },
   "subdomain": "vehiclecontact",
   "scripts": {
-    "start": "index.js"
+    "start": "node index.js"
   }
 }
