@@ -7,6 +7,7 @@ var requestValidator = require('../../lib/requestValidator');
 var oauthMiddleware = require('../../lib/oauthMiddleware');
 var authorisationMiddleware = require('../../lib/authorisationMiddleware');
 var responseCreator = require('../../lib/responseCreator');
+var eventer = require('../../lib/eventer');
 
 app.mounted(function mounted(parent) {
   app.registerErrorHandlers();
@@ -24,6 +25,22 @@ app.configure(function () {
   app.use(oauthMiddleware.requestParser());
   app.use(authorisationMiddleware.requestParser());
   mongoose.connect(config.mongo.uri);
+});
+
+app.get('/', function newsStream(req, res, next) {
+  function getNewsStreamResponse(err, eventResponse) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(responseCreator.newsStreamResponse(eventResponse));
+    }
+  };
+  var query = req.query;
+  if (req.user && query.all !== 'true') {
+    api.userNewsStream(req.user, query, getNewsStreamResponse);
+  } else {
+    api.publicNewsStream(query, getNewsStreamResponse);
+  }
 });
 
 app.put('/user', function createUser(req, res, next) {
@@ -51,6 +68,7 @@ app.put('/rego/:country/:state/:rego/watchers', function watchRego(req, res, nex
     if (err) {
       res.send(err);
     } else {
+      eventer.spamEvent('watch', req.user, response.rego, response.watcher);
       res.send(responseCreator.createWatcherResponse(response.rego, response.watcher));
     }
   }
@@ -62,6 +80,7 @@ app.put('/rego/:country/:state/:rego/conversations', function createConversation
     if (err) {
       res.send(err);
     } else {
+      eventer.spamEvent('conversation', req.user, response.rego, response.conversation);
       res.send(responseCreator.commentOnRegoResponse(response.rego, response.conversation));
     }
   }
