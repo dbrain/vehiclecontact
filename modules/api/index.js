@@ -44,13 +44,24 @@ app.get('/', function newsStream(req, res, next) {
 });
 
 app.get('/user/watching', function getWatching(req, res, next) {
-  api.userWatching(req.user, req.query, function getWatchingResponse(err, watching) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(responseCreator.getWatchingResponse(watching));
-    }
-  });
+  var query = req.query;
+  if (query.detailed) {
+    api.userWatching(req.user, query, function getWatchingResponse(err, watching) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(responseCreator.getWatchingResponse(watching));
+      }
+    });
+  } else {
+    process.nextTick(function returnIds() {
+      res.send(responseCreator.getUndetailedWatchingResponse(req.user.watching));
+    })
+  }
+});
+
+app.get('/rego', function findRego(req, res, next) {
+  next();
 });
 
 app.put('/user', function createUser(req, res, next) {
