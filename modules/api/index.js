@@ -43,6 +43,16 @@ app.get('/', function newsStream(req, res, next) {
   }
 });
 
+app.get('/user/watching', function getWatching(req, res, next) {
+  api.userWatching(req.user, req.query, function getWatchingResponse(err, watching) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(responseCreator.getWatchingResponse(watching));
+    }
+  });
+});
+
 app.put('/user', function createUser(req, res, next) {
   api.createUser(req.body, function createUserResponse(err, user) {
     if (err) {
