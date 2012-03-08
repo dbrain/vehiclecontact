@@ -30,7 +30,7 @@ app.configure(function () {
 app.get('/', function newsStream(req, res, next) {
   function getNewsStreamResponse(err, eventResponse) {
     if (err) {
-      res.send(err);
+      res.send(err, 500);
     } else {
       res.send(responseCreator.newsStreamResponse(eventResponse));
     }
@@ -48,7 +48,7 @@ app.get('/user/watching', function getWatching(req, res, next) {
   if (query.detailed) {
     api.userWatching(req.user, query, function getWatchingResponse(err, watching) {
       if (err) {
-        res.send(err);
+        res.send(err, 500);
       } else {
         res.send(responseCreator.getWatchingResponse(watching));
       }
@@ -60,14 +60,21 @@ app.get('/user/watching', function getWatching(req, res, next) {
   }
 });
 
-app.get('/rego', function findRego(req, res, next) {
-  next();
+app.get('/regos', function findRego(req, res, next) {
+  var query = req.query;
+  api.findRegos(query, function findRegoResponse(err, regos) {
+    if (err) {
+      res.send(err, 500);
+    } else {
+      res.send(responseCreator.getFindRegoResponse(req.user, regos));
+    }
+  });
 });
 
 app.put('/user', function createUser(req, res, next) {
   api.createUser(req.body, function createUserResponse(err, user) {
     if (err) {
-      res.send(err)
+      res.send(err, 500);
     } else {
       res.send(responseCreator.createUserResponse(user));
     }
@@ -77,7 +84,7 @@ app.put('/user', function createUser(req, res, next) {
 app.put('/rego', function createRego(req, res, next) {
   api.createRego(req.user, req.body, function createRegoResponse(err, rego) {
     if (err) {
-      res.send(err);
+      res.send(err, 500);
     } else {
       res.send(responseCreator.createRegoResponse(rego));
     }
@@ -87,7 +94,7 @@ app.put('/rego', function createRego(req, res, next) {
 app.put('/rego/:country/:state/:rego/watchers', function watchRego(req, res, next) {
   function watchRegoResponse(err, response) {
     if (err) {
-      res.send(err);
+      res.send(err, 500);
     } else {
       eventer.spamEvent('watch', req.user, response.rego, response.watcher);
       res.send(responseCreator.createWatcherResponse(response.rego, response.watcher));
@@ -99,7 +106,7 @@ app.put('/rego/:country/:state/:rego/watchers', function watchRego(req, res, nex
 app.put('/rego/:country/:state/:rego/conversations', function createConversationOnRego(req, res, next) {
   function commentOnRegoResponse(err, response) {
     if (err) {
-      res.send(err);
+      res.send(err, 500);
     } else {
       eventer.spamEvent('conversation', req.user, response.rego, response.conversation);
       res.send(responseCreator.commentOnRegoResponse(response.rego, response.conversation));
