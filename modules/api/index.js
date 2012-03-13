@@ -91,6 +91,17 @@ app.put('/rego', function createRego(req, res, next) {
   })
 });
 
+app.get('/rego/:country/:state/:rego', function watchRego(req, res, next) {
+  var query = req.query;
+  api.getRego(query, req.param('rego'), req.param('state'), req.param('country'), function regoResponse(err, rego) {
+    if (err) {
+      res.send(err, 500);
+    } else {
+      res.send(responseCreator.getRegoDetailedResponse(req.user, rego));
+    }
+  });
+});
+
 app.put('/rego/:country/:state/:rego/watchers', function watchRego(req, res, next) {
   function watchRegoResponse(err, response) {
     if (err) {
