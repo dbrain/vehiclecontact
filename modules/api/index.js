@@ -93,11 +93,13 @@ app.put('/rego', function createRego(req, res, next) {
 
 app.get('/rego/:country/:state/:rego', function watchRego(req, res, next) {
   var query = req.query;
-  api.getRego(query, req.param('rego'), req.param('state'), req.param('country'), function regoResponse(err, rego) {
+  api.getRego(query, req.param('rego'), req.param('state'), req.param('country'), function regoResponse(err, response) {
     if (err) {
       res.send(err, 500);
+    } else if (response.result) {
+      res.send(responseCreator.getRegoDetailedResponse(req.user, response));
     } else {
-      res.send(responseCreator.getRegoDetailedResponse(req.user, rego));
+      res.send('Rego not found', 404);
     }
   });
 });
