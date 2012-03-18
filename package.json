@@ -1,7 +1,7 @@
 {
   "name": "vehiclecontact",
   "description": "Contact the owner of a vehicle",
-  "version": "0.0.1-4",
+  "version": "0.0.1-5",
   "main": "./index.js",
   "dependencies": {
     "express": "2.5.x",
